@@ -5,73 +5,74 @@ using TMPro;
 
 public class RaycastBuilding : MonoBehaviour
 {
-    public bool building;
-    public GameObject[] objs;
-    public GameObject[] placeObjs;
-    public GameObject sellCanvas;
-    public TextMeshProUGUI sellCost;
-    public int[] objCost;
-    private int selected = 0;
-    public float rot = 0;
-    public LayerMask whatIsBuilding;
-    public LayerMask cantBuildLayer;
+    public bool Building;
+    public GameObject[] Objs;
+    public GameObject[] PlaceObjs;
+    public GameObject SellCanvas;
+    public TextMeshProUGUI SellCost;
+    public int[] ObjCost;
+    public float Rot = 0;
+    public LayerMask WhatIsBuilding;
+    public LayerMask CantBuildLayer;
 
-    public HUDTextController text;
+    public HUDTextController Text;
 
-    public Transform player;
-    public GameObject buildingHUD;
-    public GameObject nonBuildingHUD;
+    public Transform Player;
+    public GameObject BuildingHUD;
+    public GameObject NonBuildingHUD;
 
     [SerializeField] private AudioClip errorSound;
     [SerializeField] private AudioClip[] aClips;
     [SerializeField] private AudioClip[] hudClips;
     [SerializeField] private AudioSource aSource;
 
+    private int _selected = 0;
+
     private void Update()
     {
         if (Input.GetKeyDown(KeyCode.Tab))
         {
-            building = !building;
-            if (building)
-                Select(selected);
+            Building = !Building;
+            if (Building)
+                Select(_selected);
             else
-                objs[selected].SetActive(false);
-                sellCanvas.SetActive(false);
+                Objs[_selected].SetActive(false);
+                SellCanvas.SetActive(false);
         }
 
-        buildingHUD.SetActive(building);
-        nonBuildingHUD.SetActive(!building);
+        BuildingHUD.SetActive(Building);
+        NonBuildingHUD.SetActive(!Building);
 
-        if (building)
+        if (Building)
         {
             if (Input.GetKeyDown(KeyCode.E))
             {
-                Select(selected + 1 < objs.Length ? selected + 1 : 0);
+                Select(_selected + 1 < Objs.Length ? _selected + 1 : 0);
                 aSource.clip = hudClips[Random.Range(0, hudClips.Length)];
                 aSource.Play();
             }
             if (Input.GetKeyDown(KeyCode.Q))
             {
-                Select(selected - 1 >= 0 ? selected - 1 : objs.Length-1);
+                Select(_selected - 1 >= 0 ? _selected - 1 : Objs.Length-1);
                 aSource.clip = hudClips[Random.Range(0, hudClips.Length)];
                 aSource.Play();
             }
 
             if (Input.GetKeyDown(KeyCode.R))
             {
-                rot -= 90;
-                objs[selected].transform.rotation = Quaternion.Euler(0,rot,0);
+                Rot -= 90;
+                Objs[_selected].transform.rotation = Quaternion.Euler(0,Rot,0);
                 aSource.clip = hudClips[Random.Range(0, hudClips.Length)];
                 aSource.Play();
             }
-            sellCanvas.SetActive(false);
+            SellCanvas.SetActive(false);
             RaycastHit hit = new();
-            if (Physics.Raycast(transform.position + transform.forward * 1.8f + Vector3.up * 3f, Vector3.down, out hit, 6f, whatIsBuilding))
+            if (Physics.Raycast(transform.position + transform.forward * 1.8f + Vector3.up * 3f, Vector3.down, out hit, 6f, WhatIsBuilding))
             {
-                if (((cantBuildLayer.value & (1 << hit.transform.gameObject.layer)) > 0))
+                if (((CantBuildLayer.value & (1 << hit.transform.gameObject.layer)) > 0))
                 {
-                    objs[selected].SetActive(false);
-                    sellCanvas.SetActive(false);
+                    Objs[_selected].SetActive(false);
+                    SellCanvas.SetActive(false);
                     return;
                 }
 
@@ -79,26 +80,26 @@ public class RaycastBuilding : MonoBehaviour
 
                 if (place != new Vector3(Mathf.Round(hit.point.x), 0, Mathf.Round(hit.point.z)))
                 {
-                    objs[selected].SetActive(false);
+                    Objs[_selected].SetActive(false);
                     return;
                 }
 
                 if (hit.transform.gameObject.name == "Floor")
                 {
-                    objs[selected].SetActive(true);
+                    Objs[_selected].SetActive(true);
 
-                    objs[selected].transform.position = place;
+                    Objs[_selected].transform.position = place;
 
                     if (Input.GetMouseButtonDown(0))
                     {
-                        if (Stats.Money >= objCost[selected])
+                        if (Stats.Money >= ObjCost[_selected])
                         {
-                            Stats.Money -= objCost[selected];
+                            Stats.Money -= ObjCost[_selected];
 
-                            Instantiate(placeObjs[selected], place, Quaternion.Euler(0, rot, 0));
+                            Instantiate(PlaceObjs[_selected], place, Quaternion.Euler(0, Rot, 0));
                             Reference.Achievement.Unlock(7);
 
-                            if (selected == 4)
+                            if (_selected == 4)
                             {
                                 Stats.Generators++;
                                 Reference.Achievement.Unlock(8);
@@ -107,7 +108,7 @@ public class RaycastBuilding : MonoBehaviour
                                     Reference.Achievement.Unlock(14);
                                 }
                             }
-                            if (selected == 5)
+                            if (_selected == 5)
                             {
                                 Stats.Benders++;
                             }
@@ -119,31 +120,31 @@ public class RaycastBuilding : MonoBehaviour
                         {
                             aSource.clip = errorSound;
                             aSource.Play();
-                            text.SendWarning("Not enough money.", 1f);
+                            Text.SendWarning("Not enough money.", 1f);
                         }
                     }
                 }
                 else
                 {
-                    sellCanvas.SetActive(true);
-                    sellCanvas.transform.position = Vector3.Lerp(sellCanvas.transform.position, new Vector3(place.x, sellCanvas.transform.position.y, place.z), .05f);
-                    sellCanvas.transform.LookAt(player.position);
+                    SellCanvas.SetActive(true);
+                    SellCanvas.transform.position = Vector3.Lerp(SellCanvas.transform.position, new Vector3(place.x, SellCanvas.transform.position.y, place.z), .05f);
+                    SellCanvas.transform.LookAt(Player.position);
 
-                    sellCost.text = "$" + Mathf.Round(objCost[GetBuildID(hit.transform)] / 2).ToString();
+                    SellCost.text = "$" + Mathf.Round(ObjCost[GetBuildID(hit.transform)] / 2).ToString();
 
-                    objs[selected].SetActive(false);
+                    Objs[_selected].SetActive(false);
                     if (Input.GetMouseButtonDown(1))
                     {
                         if (DestroyBuilding(hit.transform))
                         {
-                            Stats.Money += Mathf.RoundToInt(objCost[GetBuildID(hit.transform)] / 2);
+                            Stats.Money += Mathf.RoundToInt(ObjCost[GetBuildID(hit.transform)] / 2);
                         }
                     }
                 }
             }
             else
             {
-                objs[selected].SetActive(false);
+                Objs[_selected].SetActive(false);
             }
         }
     }
@@ -208,7 +209,7 @@ public class RaycastBuilding : MonoBehaviour
                 {
                     aSource.clip = errorSound;
                     aSource.Play();
-                    text.SendWarning("You can't have less than one Generators.", 3f);
+                    Text.SendWarning("You can't have less than one Generators.", 3f);
                     return false;
                 }
             case "ClipBender(Clone)":
@@ -224,7 +225,7 @@ public class RaycastBuilding : MonoBehaviour
                 {
                     aSource.clip = errorSound;
                     aSource.Play();
-                    text.SendWarning("You can't have less than one Benders.", 3f);
+                    Text.SendWarning("You can't have less than one Benders.", 3f);
                     return false;
                 }
             case "Divider(Clone)":
@@ -238,9 +239,9 @@ public class RaycastBuilding : MonoBehaviour
 
     public void Select(int index)
     {
-        objs[selected].SetActive(false);
-        selected = index;
-        objs[selected].SetActive(true);
-        objs[selected].transform.rotation = Quaternion.Euler(0, rot, 0);
+        Objs[_selected].SetActive(false);
+        _selected = index;
+        Objs[_selected].SetActive(true);
+        Objs[_selected].transform.rotation = Quaternion.Euler(0, Rot, 0);
     }
 }

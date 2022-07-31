@@ -5,16 +5,16 @@ using TMPro;
 
 public class UpdateWorldHUD : MonoBehaviour
 {
-    private TextMeshProUGUI text;
+    private TextMeshProUGUI _text;
     [SerializeField] private ClipsPerSecond cps;
 
     private void Start()
     {
-        text = GetComponent<TextMeshProUGUI>();
+        _text = GetComponent<TextMeshProUGUI>();
     }
 
     private void Update()
     {
-        text.text = "Total clips sold: " + Stats.ClipsSold.ToString() + "\nTotal money made: $" + (Stats.ClipsSold*15).ToString() + "\nClips sold per second: " + cps.clipsPerSecond.ToString();
+        _text.text = "Total clips sold: " + Stats.ClipsSold.ToString() + "\nTotal money made: $" + (Stats.ClipsSold*15).ToString() + "\nClips sold per second: " + cps.Clips.ToString();
     }
 }

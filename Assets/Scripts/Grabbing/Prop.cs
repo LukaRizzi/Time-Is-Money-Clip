@@ -5,31 +5,32 @@ using UnityEngine;
 [RequireComponent(typeof(Outline))]
 public class Prop : MonoBehaviour
 {
-    Outline outline;
-    [SerializeField] Rigidbody rb;
-    Collider coll;
+    [SerializeField] private Rigidbody rb;
 
-    public MonoBehaviour propScript;
-    public bool watched = false;
-    public bool active = false;
-    public bool invertScript = false;
-    public bool disableColl = true;
+    Outline _outline;
+    Collider _coll;
+
+    public MonoBehaviour PropScript;
+    public bool Watched = false;
+    public bool Active = false;
+    public bool InvertScript = false;
+    public bool DisableColl = true;
 
     private void Start()
     {
-        outline = GetComponent<Outline>();
+        _outline = GetComponent<Outline>();
         if (!rb)
             rb = GetComponent<Rigidbody>();
-        coll = GetComponent<Collider>();
+        _coll = GetComponent<Collider>();
     }
 
     void Update()
     {
-        outline.enabled = watched && !active;
+        _outline.enabled = Watched && !Active;
         if (rb)
-            rb.isKinematic = active;
-        if (propScript)
-            propScript.enabled = active == !invertScript;
-        coll.enabled = !active || !disableColl;
+            rb.isKinematic = Active;
+        if (PropScript)
+            PropScript.enabled = Active == !InvertScript;
+        _coll.enabled = !Active || !DisableColl;
     }
 }

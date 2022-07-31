@@ -5,29 +5,31 @@ using TMPro;
 
 public class SellClips : MonoBehaviour
 {
-    public LayerMask whatIsClip;
+    public LayerMask WhatIsClip;
+    
     [SerializeField] private AudioClip[] aClips;
     [SerializeField] private AudioSource aSource;
 
-    private int storedClips = 0;
     [SerializeField] private float sellClipsPerSecond = 3;
-    private float timer;
-    [SerializeField] private TextMeshProUGUI storedClipsText;
 
+    [SerializeField] private TextMeshProUGUI storedClipsText;
     [SerializeField] private TextMeshProUGUI storedClipsUpgradeText;
     [SerializeField] private TextMeshProUGUI storedClipCostText;
     [SerializeField] private float storedClipUpgradeCost = 100;
 
+    private float _timer;
+    private int _storedClips = 0;
+
     private void Update()
     {
-        timer += Time.deltaTime;
-        if (timer > 1 / sellClipsPerSecond)
+        _timer += Time.deltaTime;
+        if (_timer > 1 / sellClipsPerSecond)
         {
-            if (storedClips > 0)
+            if (_storedClips > 0)
             {
                 Sell();
             }
-            timer -= 1 / sellClipsPerSecond;
+            _timer -= 1 / sellClipsPerSecond;
         }
     }
 
@@ -50,18 +52,18 @@ public class SellClips : MonoBehaviour
 
     private void Sell()
     {
-        if (Reference.Achievement.lastSeller != null)
+        if (Reference.Achievement.LastSeller != null)
         {
-            if (Reference.Achievement.lastSeller != transform)
+            if (Reference.Achievement.LastSeller != transform)
             Reference.Achievement.Unlock(9);
         }
-        Reference.Achievement.lastSeller = transform;
+        Reference.Achievement.LastSeller = transform;
 
         Reference.Achievement.Unlock(3);
-        storedClips--;
-        storedClipsText.text = "Stored Clips: " + storedClips.ToString();
+        _storedClips--;
+        storedClipsText.text = "Stored Clips: " + _storedClips.ToString();
         Stats.ClipsSold++;
-        Stats.Money += 15; Stats.TotalRevenue += 15; Stats.clipsPerSecond++;
+        Stats.Money += 15; Stats.TotalRevenue += 15; Stats.ClipsPerSecond++;
 
         if (Stats.TotalRevenue >= 100)
         {
@@ -81,7 +83,7 @@ public class SellClips : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if ((whatIsClip.value & (1 << other.transform.gameObject.layer)) > 0)
+        if ((WhatIsClip.value & (1 << other.transform.gameObject.layer)) > 0)
         {
             if (other.transform.parent) //Quantum Bucket Achievement
             {
@@ -91,8 +93,8 @@ public class SellClips : MonoBehaviour
 
             Destroy(other.gameObject);
 
-            storedClips++;
-            storedClipsText.text = "Stored Clips: " + storedClips.ToString();
+            _storedClips++;
+            storedClipsText.text = "Stored Clips: " + _storedClips.ToString();
 
             aSource.clip = aClips[Random.Range(0, aClips.Length)];
             aSource.Play();

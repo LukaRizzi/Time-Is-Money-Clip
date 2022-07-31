@@ -4,18 +4,18 @@ using UnityEngine;
 
 public class ConveyorBeltCorner : MonoBehaviour
 {
-    public LayerMask whatIsMovable;
-    public List<Rigidbody> rbs;
-    public bool inverted = false;
+    public LayerMask WhatIsMovable;
+    public List<Rigidbody> Rbs;
+    public bool Inverted = false;
     [SerializeField] private float moveForce = 15f;
 
     private void FixedUpdate()
     {
         Vector3 _i = transform.right;
-        if (inverted)
+        if (Inverted)
             _i *= -1;
 
-        foreach (Rigidbody rb in rbs.ToArray())
+        foreach (Rigidbody rb in Rbs.ToArray())
         {
             if (!rb)
                 continue;
@@ -25,17 +25,17 @@ public class ConveyorBeltCorner : MonoBehaviour
 
     private void OnTriggerEnter(Collider other)
     {
-        if ((whatIsMovable.value & (1 << other.transform.gameObject.layer)) > 0 && other.gameObject.GetComponent<Rigidbody>())
+        if ((WhatIsMovable.value & (1 << other.transform.gameObject.layer)) > 0 && other.gameObject.GetComponent<Rigidbody>())
         {
-            rbs.Add(other.gameObject.GetComponent<Rigidbody>());
+            Rbs.Add(other.gameObject.GetComponent<Rigidbody>());
         }
     }
 
     private void OnTriggerExit(Collider other)
     {
-        if ((whatIsMovable.value & (1 << other.transform.gameObject.layer)) > 0 && other.gameObject.GetComponent<Rigidbody>())
+        if ((WhatIsMovable.value & (1 << other.transform.gameObject.layer)) > 0 && other.gameObject.GetComponent<Rigidbody>())
         {
-            rbs.Remove(other.gameObject.GetComponent<Rigidbody>());
+            Rbs.Remove(other.gameObject.GetComponent<Rigidbody>());
         }
     }
 }

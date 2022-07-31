@@ -5,21 +5,23 @@ using UnityEngine.Audio;
 
 public class MuteButton : MonoBehaviour
 {
-    private bool muted = false;
-    private float unmutedVol;
+    //Uso listener en vez de un sistema de masters acá xq era una jam de 4 días
+
+    private bool _muted = false;
+    private float _unmutedVol;
 
     [SerializeField] private AudioClip[] aClips;
     [SerializeField] private AudioSource aSource;
 
     private void Awake()
     {
-        unmutedVol = AudioListener.volume;
+        _unmutedVol = AudioListener.volume;
     }
 
     public void Mute()
     {
-        muted = !muted;
-        AudioListener.volume = muted ? 0 : unmutedVol;
+        _muted = !_muted;
+        AudioListener.volume = _muted ? 0 : _unmutedVol;
         aSource.clip = aClips[Random.Range(0, aClips.Length)];
         aSource.Play();
     }

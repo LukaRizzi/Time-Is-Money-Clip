@@ -4,19 +4,20 @@ using UnityEngine;
 
 public class BuySeller : MonoBehaviour
 {
-    public GameObject actualStation;
-    public GameObject canvas;
-    public RaycastBuilding buildingScript;
-    private bool insideTrigger = false;
-    public int cost = 500;
+    public GameObject ActualStation;
+    public GameObject Canvas;
+    public RaycastBuilding BuildingScript;
+    public int Cost = 500;
+
+    private bool _insideTrigger = false;
 
     [Header("Achievements")]
-    public bool isThisSeller = true;
-    public bool isThisBucket = false;
+    public bool IsThisSeller = true;
+    public bool IsThisBucket = false;
 
     private void Update()
     {
-        if (insideTrigger && Input.GetMouseButtonDown(0) && Stats.Money >= cost && !buildingScript.building)
+        if (_insideTrigger && Input.GetMouseButtonDown(0) && Stats.Money >= Cost && !BuildingScript.Building)
         {
             Invoke("Buy",.1f);
         }
@@ -24,18 +25,18 @@ public class BuySeller : MonoBehaviour
 
     private void Buy()
     {
-        if (isThisBucket)
+        if (IsThisBucket)
         {
-            if (Reference.Achievement.unlocked[4])
+            if (Reference.Achievement.Unlocked[4])
                 Reference.Achievement.Unlock(5);
             else
                 Reference.Achievement.Unlock(4);
         }
 
-        Stats.Money -= cost;
+        Stats.Money -= Cost;
 
-        actualStation.SetActive(true);
-        actualStation.transform.parent = null;
+        ActualStation.SetActive(true);
+        ActualStation.transform.parent = null;
         Destroy(gameObject);
     }
 
@@ -43,7 +44,7 @@ public class BuySeller : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            insideTrigger = true; canvas.SetActive(true);
+            _insideTrigger = true; Canvas.SetActive(true);
         }
     }
 
@@ -51,7 +52,7 @@ public class BuySeller : MonoBehaviour
     {
         if (other.CompareTag("Player"))
         {
-            insideTrigger = false; canvas.SetActive(false);
+            _insideTrigger = false; Canvas.SetActive(false);
         }
     }
 }

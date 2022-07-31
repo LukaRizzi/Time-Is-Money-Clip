@@ -6,13 +6,14 @@ public class UseButton : MonoBehaviour
 {
     [SerializeField] private Animator animator;
     [SerializeField] private AnimationClip useAnim;
-    private Transform player;
     [SerializeField] private MonoBehaviour script;
     [SerializeField] private string funcName;
 
+    private Transform _player;
+
     private void Start()
     {
-        player = GameObject.FindGameObjectWithTag("Player").transform;
+        _player = GameObject.FindGameObjectWithTag("Player").transform;
     }
 
     public void Press()
