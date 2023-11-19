@@ -11,12 +11,12 @@ public class HUDTextController : MonoBehaviour
     public void SendWarning(string _text)
     {
         warningText.text = _text;
-        Invoke("CleanWarning", 5f);
+        Invoke(nameof(CleanWarning), 5f);
     }
     public void SendWarning(string _text, float _time)
     {
         warningText.text = _text;
-        Invoke("CleanWarning", _time);
+        Invoke(nameof(CleanWarning), _time);
     }
 
     public void CleanWarning()
