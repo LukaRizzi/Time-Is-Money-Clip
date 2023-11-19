@@ -14,30 +14,30 @@ public class MouseLook : MonoBehaviour
 {
  
 	public enum RotationAxes { MouseX = 1, MouseY = 2 }
-	public RotationAxes Axes = RotationAxes.MouseX;
-	public bool InvertY = false;
+	public RotationAxes axes = RotationAxes.MouseX;
+	public bool invertY = false;
 	
-	public float SensitivityX = 10F;
-	public float SensitivityY = 9F;
+	public float sensitivityX = 10F;
+	public float sensitivityY = 9F;
  
-	public float MinimumX = -360F;
-	public float MaximumX = 360F;
+	public float minimumX = -360F;
+	public float maximumX = 360F;
  
-	public float MinimumY = -85F;
-	public float MaximumY = 85F;
-
-	public float FramesOfSmoothing = 5;
-
-	float _rotationX = 0F;
-	float _rotationY = 0F;
+	public float minimumY = -85F;
+	public float maximumY = 85F;
  
-	private List<float> _rotArrayX = new List<float>();
-	float _rotAverageX = 0F;	
+	float rotationX = 0F;
+	float rotationY = 0F;
  
-	private List<float> _rotArrayY = new List<float>();
-	float _rotAverageY = 0F;
+	private List<float> rotArrayX = new List<float>();
+	float rotAverageX = 0F;	
  
-	Quaternion _originalRotation;
+	private List<float> rotArrayY = new List<float>();
+	float rotAverageY = 0F;
+ 
+	public float framesOfSmoothing = 5;
+ 
+	Quaternion originalRotation;
 	
 	void Start ()
 	{			
@@ -46,67 +46,67 @@ public class MouseLook : MonoBehaviour
 			GetComponent<Rigidbody>().freezeRotation = true;
 		}
 		
-		_originalRotation = transform.localRotation;
+		originalRotation = transform.localRotation;
 	}
  
 	void Update ()
 	{
-		if (Axes == RotationAxes.MouseX)
+		if (axes == RotationAxes.MouseX)
 		{			
-			_rotAverageX = 0f;
+			rotAverageX = 0f;
  
-			_rotationX += Input.GetAxis("Mouse X") * SensitivityX * Time.timeScale;
+			rotationX += Input.GetAxis("Mouse X") * sensitivityX * Time.timeScale;
  
-			_rotArrayX.Add(_rotationX);
+			rotArrayX.Add(rotationX);
  
-			if (_rotArrayX.Count >= FramesOfSmoothing)
+			if (rotArrayX.Count >= framesOfSmoothing)
 			{
-				_rotArrayX.RemoveAt(0);
+				rotArrayX.RemoveAt(0);
 			}
-			for(int i = 0; i < _rotArrayX.Count; i++)
+			for(int i = 0; i < rotArrayX.Count; i++)
 			{
-				_rotAverageX += _rotArrayX[i];
+				rotAverageX += rotArrayX[i];
 			}
-			_rotAverageX /= _rotArrayX.Count;
-			_rotAverageX = ClampAngle(_rotAverageX, MinimumX, MaximumX);
+			rotAverageX /= rotArrayX.Count;
+			rotAverageX = ClampAngle(rotAverageX, minimumX, maximumX);
  
-			Quaternion xQuaternion = Quaternion.AngleAxis (_rotAverageX, Vector3.up);
-			transform.localRotation = _originalRotation * xQuaternion;			
+			Quaternion xQuaternion = Quaternion.AngleAxis (rotAverageX, Vector3.up);
+			transform.localRotation = originalRotation * xQuaternion;			
 		}
 		else
 		{			
-			_rotAverageY = 0f;
+			rotAverageY = 0f;
  
  			float invertFlag = 1f;
- 			if( InvertY )
+ 			if( invertY )
  			{
  				invertFlag = -1f;
  			}
-			_rotationY += Input.GetAxis("Mouse Y") * SensitivityY * invertFlag * Time.timeScale;
+			rotationY += Input.GetAxis("Mouse Y") * sensitivityY * invertFlag * Time.timeScale;
 			
-			_rotationY = Mathf.Clamp(_rotationY, MinimumY, MaximumY);
+			rotationY = Mathf.Clamp(rotationY, minimumY, maximumY);
  	
-			_rotArrayY.Add(_rotationY);
+			rotArrayY.Add(rotationY);
  
-			if (_rotArrayY.Count >= FramesOfSmoothing)
+			if (rotArrayY.Count >= framesOfSmoothing)
 			{
-				_rotArrayY.RemoveAt(0);
+				rotArrayY.RemoveAt(0);
 			}
-			for(int j = 0; j < _rotArrayY.Count; j++)
+			for(int j = 0; j < rotArrayY.Count; j++)
 			{
-				_rotAverageY += _rotArrayY[j];
+				rotAverageY += rotArrayY[j];
 			}
-			_rotAverageY /= _rotArrayY.Count;
+			rotAverageY /= rotArrayY.Count;
  
-			Quaternion yQuaternion = Quaternion.AngleAxis (_rotAverageY, Vector3.left);
-			transform.localRotation = _originalRotation * yQuaternion;
+			Quaternion yQuaternion = Quaternion.AngleAxis (rotAverageY, Vector3.left);
+			transform.localRotation = originalRotation * yQuaternion;
 		}
 	}
 	
 	public void SetSensitivity(float s)
 	{
-		SensitivityX = s;
-		SensitivityY = s;
+		sensitivityX = s;
+		sensitivityY = s;
 	}
  
 	public static float ClampAngle (float angle, float min, float max)

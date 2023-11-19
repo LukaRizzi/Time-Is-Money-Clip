@@ -5,7 +5,7 @@ using UnityEngine;
 public class Reference : MonoBehaviour
 {
     public static AchievementManager Achievement;
-    [SerializeField] private AchievementManager achievement;
+    public AchievementManager achievement;
 
     private void Awake()
     {

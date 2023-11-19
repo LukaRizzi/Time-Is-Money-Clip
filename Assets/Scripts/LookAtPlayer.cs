@@ -4,9 +4,9 @@ using UnityEngine;
 
 public class LookAtPlayer : MonoBehaviour
 {
-    public Transform Player;
+    public Transform player;
     private void Update()
     {
-        transform.LookAt(Player.position);
+        transform.LookAt(player.position);
     }
 }

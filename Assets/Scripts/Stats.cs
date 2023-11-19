@@ -10,5 +10,5 @@ public static class Stats
     public static int Benders = 1;
     public static int TotalRevenue = 0;
 
-    public static int ClipsPerSecond = 0;
+    public static int clipsPerSecond = 0;
 }

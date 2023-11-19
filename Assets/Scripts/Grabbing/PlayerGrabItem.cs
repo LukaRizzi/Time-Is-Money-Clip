@@ -4,39 +4,39 @@ using UnityEngine;
 
 public class PlayerGrabItem : MonoBehaviour
 {
-    public LayerMask PropLayer;
-    public Transform PropGrabPos;
-    Transform _target;
-    Transform _grabbedProp = null;
+    public LayerMask propLayer;
+    Transform target;
+    public Transform propGrabPos;
+    Transform grabbedProp = null;
 
     void Update()
     {
         RaycastHit hit;
         Ray ray = Camera.main.ScreenPointToRay(new Vector2(Camera.main.pixelWidth / 2, Camera.main.pixelHeight / 2));
 
-        if (_target)
-            _target.GetComponent<Prop>().Watched = false;
-        if (Physics.Raycast(ray, out hit, 3, PropLayer))
+        if (target)
+            target.GetComponent<Prop>().watched = false;
+        if (Physics.Raycast(ray, out hit, 3, propLayer))
         {
-            _target = hit.transform;
+            target = hit.transform;
         }
         else
         {
-            _target = null;
+            target = null;
         }
 
-        if (_target)
+        if (target)
         {
-            _target.GetComponent<Prop>().Watched = true;
+            target.GetComponent<Prop>().watched = true;
             if (Input.GetMouseButtonDown(0))
             {
-                if (_grabbedProp) {  DropItem(); }
-                GrabItem(_target);
-                _target = null;
+                if (grabbedProp) {  DropItem(); }
+                GrabItem(target);
+                target = null;
             }
         }
 
-        if (_grabbedProp && Input.GetMouseButtonDown(1))
+        if (grabbedProp && Input.GetMouseButtonDown(1))
         {
             DropItem();
         }
@@ -44,24 +44,24 @@ public class PlayerGrabItem : MonoBehaviour
 
     void GrabItem(Transform _target)
     {
-        if (_target.name == "UnmadeClip(Clone)")
+        if (target.name == "UnmadeClip(Clone)")
             Reference.Achievement.Unlock(1);
 
-        _grabbedProp = _target;
-        _target.GetComponent<Prop>().Active = true;
-        _target.SetParent(_grabbedProp, false);
+        grabbedProp = _target;
+        _target.GetComponent<Prop>().active = true;
+        _target.SetParent(propGrabPos, false);
         _target.localRotation = Quaternion.Euler(-90, 0, 0);
         _target.localPosition = Vector3.zero; //_target.localRotation = Quaternion.Euler(-90,0,0);
     }
 
     void DropItem()
     {
-        Debug.Log("Dropped Item " + _grabbedProp.name);
-        _grabbedProp.GetComponent<Prop>().Active = false;
-        _grabbedProp.SetParent(null, false);
-        _grabbedProp.position = PropGrabPos.position;
-        _grabbedProp.rotation = Quaternion.identity;
-        _grabbedProp = null;
+        Debug.Log("Dropped Item " + grabbedProp.name);
+        grabbedProp.GetComponent<Prop>().active = false;
+        grabbedProp.SetParent(null, false);
+        grabbedProp.position = propGrabPos.position;
+        grabbedProp.rotation = Quaternion.identity;
+        grabbedProp = null;
     }
 
 }

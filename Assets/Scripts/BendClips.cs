@@ -5,10 +5,10 @@ using UnityEngine;
 public class BendClips : MonoBehaviour
 {
     [SerializeField] private GenerateClips gclips;
-    public LayerMask WhatIsClip;
+    public LayerMask whatIsClip;
     private void OnTriggerEnter(Collider other)
     {
-        if ((WhatIsClip.value & (1 << other.transform.gameObject.layer)) > 0)
+        if ((whatIsClip.value & (1 << other.transform.gameObject.layer)) > 0)
         {
             gclips.GenerateClipFree();
             Destroy(other.gameObject);

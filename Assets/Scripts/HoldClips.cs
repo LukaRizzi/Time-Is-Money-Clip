@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class HoldClips : MonoBehaviour
 {
-    public LayerMask WhatIsClip;
+    public LayerMask whatIsClip;
 
     private void OnTriggerEnter(Collider other)
     {
-        if ((WhatIsClip.value & (1 << other.transform.gameObject.layer)) > 0)
+        if ((whatIsClip.value & (1 << other.transform.gameObject.layer)) > 0)
         {
             other.transform.parent = transform;
         }
@@ -16,7 +16,7 @@ public class HoldClips : MonoBehaviour
 
     private void OnTriggerExit(Collider other)
     {
-        if ((WhatIsClip.value & (1 << other.transform.gameObject.layer)) > 0)
+        if ((whatIsClip.value & (1 << other.transform.gameObject.layer)) > 0)
         {
             other.transform.parent = null;
         }

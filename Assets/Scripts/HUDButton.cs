@@ -4,11 +4,11 @@ using UnityEngine;
 
 public class HUDButton : MonoBehaviour
 {
-    public string FuncName;
-    public MonoBehaviour Script;
+    public string funcName;
+    public MonoBehaviour script;
 
     public void UseButton()
     {
-        Script.Invoke(FuncName, 0f);
+        script.Invoke(funcName, 0f);
     }
 }

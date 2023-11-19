@@ -26,13 +26,13 @@ public class GenerateClips : MonoBehaviour
     [SerializeField] private TextMeshProUGUI wirePriceUpgradeText;
     [SerializeField] private int wirePriceUpdateCost = 50;
 
-    public bool Automatic = false;
-    public float SpawnCD = 5f;
-    public float Timer = 0f;
+    public bool automatic = false;
+    public float spawnCD = 5f;
+    public float timer = 0f;
 
     [Header("Achievements")]
-    public bool IsThisWireGenerator = false;
-    public bool IsThisClipGenerator = false;
+    public bool isThisWireGenerator = false;
+    public bool isThisClipGenerator = false;
 
     private void Start()
     {
@@ -41,13 +41,13 @@ public class GenerateClips : MonoBehaviour
 
     private void Update()
     {
-        if (Automatic)
+        if (automatic)
         {
-            Timer -= Time.deltaTime;
+            timer -= Time.deltaTime;
 
-            if (Timer <= 0)
+            if (timer <= 0)
             {
-                Timer += SpawnCD;
+                timer += spawnCD;
                 AutoGenerateClip();
             }
         }
@@ -59,7 +59,7 @@ public class GenerateClips : MonoBehaviour
         if (Stats.Money >= autobuyUpgradePrice)
         {
             Stats.Money -= autobuyUpgradePrice;
-            Automatic = true;
+            automatic = true;
             buyAutomaticButton.SetActive(false);
             upgradeShopStage2HUD.SetActive(true);
         }
@@ -105,8 +105,8 @@ public class GenerateClips : MonoBehaviour
             Stats.Money -= clipUpgradePrice;
             clipUpgradePrice = Mathf.RoundToInt(clipUpgradePrice * 3f);
             clipUpgradePriceHUD.text = "$" + clipUpgradePrice.ToString();
-            SpawnCD *= .5f;
-            Timer = Mathf.Min(Timer, SpawnCD);
+            spawnCD *= .5f;
+            timer = Mathf.Min(timer, spawnCD);
 
             aSource.clip = aClips[Random.Range(0, aClips.Length)];
             aSource.Play();
@@ -123,7 +123,7 @@ public class GenerateClips : MonoBehaviour
     {
         if (Stats.Money >= wirePrice)
         {
-            if (IsThisWireGenerator)
+            if (isThisWireGenerator)
                 Reference.Achievement.Unlock(0);
 
             Stats.Money -= wirePrice;
@@ -147,7 +147,7 @@ public class GenerateClips : MonoBehaviour
     {
         if (Stats.Money >= wirePrice)
         {
-            if (IsThisWireGenerator)
+            if (isThisWireGenerator)
                 Reference.Achievement.Unlock(0);
 
             Stats.Money -= wirePrice;
@@ -163,7 +163,7 @@ public class GenerateClips : MonoBehaviour
 
     public void GenerateClipFree()
     {
-        if (IsThisClipGenerator)
+        if (isThisClipGenerator)
             Reference.Achievement.Unlock(2);
 
         GameObject _clip = Random.Range(0, 100) > .01 ? clip : easterEggClip[Random.Range(0, easterEggClip.Length)];
@@ -176,8 +176,8 @@ public class GenerateClips : MonoBehaviour
 
     public void EnableAutomatic()
     {
-        Automatic = !Automatic;
-        automaticEnabledHUD.text = Automatic ? "Automatic Enabled" : "Automatic Disabled";
+        automatic = !automatic;
+        automaticEnabledHUD.text = automatic ? "Automatic Enabled" : "Automatic Disabled";
 
         aSource.clip = aClips[Random.Range(0, aClips.Length)];
         aSource.Play();

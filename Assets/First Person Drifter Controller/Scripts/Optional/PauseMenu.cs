@@ -64,7 +64,7 @@ public class PauseMenu : MonoBehaviour
 		
 		camMouseLook = Camera.main.GetComponent<MouseLook>();
 		capsuleMouseLook = GameObject.FindWithTag("Player").GetComponent<MouseLook>();
-		sensitivitySlider = capsuleMouseLook.SensitivityX;
+		sensitivitySlider = capsuleMouseLook.sensitivityX;
 		
 		// save the default values
 		defaultFOV = fovSlider;
@@ -221,7 +221,7 @@ public class PauseMenu : MonoBehaviour
 			// if not invertYd
 			if( PlayerPrefs.GetInt("InvertY") < 1)
 			{
-				camMouseLook.InvertY = true;
+				camMouseLook.invertY = true;
 				
 				PlayerPrefs.SetInt("InvertY", 1);
 				
@@ -229,7 +229,7 @@ public class PauseMenu : MonoBehaviour
 			}
 			else
 			{
-				camMouseLook.InvertY = false;
+				camMouseLook.invertY = false;
 				
 				PlayerPrefs.SetInt("InvertY", 0);
 				
@@ -308,7 +308,7 @@ public class PauseMenu : MonoBehaviour
 		if( !PlayerPrefs.HasKey("Sensitivity") )
 		{
 			print("No Sensitivity in PlayerPrefs, creating");
-			PlayerPrefs.SetFloat("Sensitivity", capsuleMouseLook.SensitivityX);
+			PlayerPrefs.SetFloat("Sensitivity", capsuleMouseLook.sensitivityX);
 		}
 		else
 		{

@@ -4,17 +4,17 @@ using UnityEngine;
 
 public class DebugPlayer : MonoBehaviour
 {
-    public bool Debug = false;
+    public bool debug = false;
 
     private void Update()
     {
         if (Input.GetKey(KeyCode.L) && Input.GetKey(KeyCode.K) && Input.GetKey(KeyCode.U))
         {
             Reference.Achievement.Unlock(17);
-            Debug = true;
+            debug = true;
         }
 
-        if (Debug && Input.GetKeyDown(KeyCode.C))
+        if (debug && Input.GetKeyDown(KeyCode.C))
         {
             Stats.Money += 100;
         }

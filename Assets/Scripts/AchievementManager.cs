@@ -15,17 +15,17 @@ public class AchievementManager : MonoBehaviour
     [SerializeField] private TextMeshProUGUI nextAchievementDescription;
 
     [SerializeField] private Achievement[] achievements;
-    public bool[] Unlocked;
+    public bool[] unlocked;
 
     [Header("AchievementData")]
-    public Transform LastSeller;
+    public Transform lastSeller;
 
     private void Awake()
     {
-        Unlocked = new bool[achievements.Length];
-        for (int i = 0; i < Unlocked.Length; i++)
+        unlocked = new bool[achievements.Length];
+        for (int i = 0; i < unlocked.Length; i++)
         {
-            Unlocked[i] = false;
+            unlocked[i] = false;
         }
     }
 
@@ -37,13 +37,13 @@ public class AchievementManager : MonoBehaviour
     [SerializeField] private AudioSource aSource;
     public void Unlock(int _id) //Cambiar a ID
     {
-        if (Unlocked[_id])
+        if (unlocked[_id])
             return;
 
         anim.Play(animClip.name,-1,0f);
         aSource.Play();
 
-        Unlocked[_id] = true;
+        unlocked[_id] = true;
         achievementName.text = achievements[_id].title;
         achievementDescription.text = achievements[_id].desc;
 
@@ -54,7 +54,7 @@ public class AchievementManager : MonoBehaviour
     {
         for (int i = 0; i < achievements.Length; i++)
         {
-            if (Unlocked[i])
+            if (unlocked[i])
                 continue;
 
             nextAchievementName.text = achievements[i].title;
